@@ -1,0 +1,88 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "DevextremeApi/1.0.0": {
+        "dependencies": {
+          "DevExtreme.AspNet.Core": "22.2.6",
+          "DevExtreme.AspNet.Data": "2.9.0"
+        },
+        "runtime": {
+          "DevextremeApi.dll": {}
+        }
+      },
+      "DevExtreme.AspNet.Core/22.2.6": {
+        "dependencies": {
+          "DevExtreme.AspNet.Data": "2.9.0",
+          "Newtonsoft.Json": "13.0.2"
+        },
+        "runtime": {
+          "lib/net6.0/DevExtreme.AspNet.Core.dll": {
+            "assemblyVersion": "22.2.6.0",
+            "fileVersion": "22.2.6.0"
+          }
+        }
+      },
+      "DevExtreme.AspNet.Data/2.9.0": {
+        "dependencies": {
+          "Microsoft.CSharp": "4.4.0",
+          "Newtonsoft.Json": "13.0.2"
+        },
+        "runtime": {
+          "lib/netstandard2.0/DevExtreme.AspNet.Data.dll": {
+            "assemblyVersion": "2.9.0.0",
+            "fileVersion": "2.9.0.0"
+          }
+        }
+      },
+      "Microsoft.CSharp/4.4.0": {},
+      "Newtonsoft.Json/13.0.2": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.2.27524"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "DevextremeApi/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DevExtreme.AspNet.Core/22.2.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VY7gLillh+fyOE1S6j2RtocON+0t+einJ1dzdMcSnermqekEltuHwX+CvFIjrrxQJPbQwKjB9zeyniUQMQZtuw==",
+      "path": "devextreme.aspnet.core/22.2.6",
+      "hashPath": "devextreme.aspnet.core.22.2.6.nupkg.sha512"
+    },
+    "DevExtreme.AspNet.Data/2.9.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-C3cdpuuCUTsR6r27xb097xco8+Unw0NEKKfPTSUsM0TcQ6CZqURurGKVVj5jVcKrFbzoJQZCZnpvzF7vCVqqbw==",
+      "path": "devextreme.aspnet.data/2.9.0",
+      "hashPath": "devextreme.aspnet.data.2.9.0.nupkg.sha512"
+    },
+    "Microsoft.CSharp/4.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-vvVR/B08YVghQ4jHEloxqw2ZWzEGE1AOA5E0DioUM3ujbXz6FD3AfB/0Jl2ohJPd0nXYGwmPe1En6HTsSriq1A==",
+      "path": "microsoft.csharp/4.4.0",
+      "hashPath": "microsoft.csharp.4.4.0.nupkg.sha512"
+    },
+    "Newtonsoft.Json/13.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-R2pZ3B0UjeyHShm9vG+Tu0EBb2lC8b0dFzV9gVn50ofHXh9Smjk6kTn7A/FdAsC8B5cKib1OnGYOXxRBz5XQDg==",
+      "path": "newtonsoft.json/13.0.2",
+      "hashPath": "newtonsoft.json.13.0.2.nupkg.sha512"
+    }
+  }
+}

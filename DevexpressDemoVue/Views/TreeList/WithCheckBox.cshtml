@@ -1,0 +1,260 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/devextreme/js/cldr/event.min.js"></script>
+<script src="~/devextreme/js/cldr/supplemental.min.js"></script>
+<script src="~/devextreme/js/cldr/unresolved.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/devextreme/css/dx.light.css" />
+<script src="~/devextreme/js/dx.all.js"></script>
+<script src="~/devextreme/js/exceljs.min.js"></script>
+<script src="~/devextreme/js/jspdf.umd.min.js"></script>
+<script src="~/devextreme/js/filesaver.min.js"></script>
+<div class="container">
+    <button id="exportExcelBtn">Export Excel</button>
+    <button id="exportPdfBtn">Export Pdf</button>
+    <button id="getSelectedRows">Get Selected Rows</button>
+    <div id="gridContainer"></div>
+</div>
+<script>
+    $(() => {
+        window.jsPDF = window.jspdf.jsPDF;
+        function isNotEmpty(value) {
+            return value !== undefined && value !== null && value !== '';
+        }
+        const store = new DevExpress.data.CustomStore({
+            key: 'id',
+            load(loadOptions) {
+                const deferred = $.Deferred();
+                const args = {};
+
+                [
+                    'skip',
+                    'take',
+                    'requireTotalCount',
+                    'requireGroupCount',
+                    'sort',
+                    'filter',
+                    'totalSummary',
+                    'group',
+                    'groupSummary',
+                ].forEach((i) => {
+                    if (i in loadOptions && isNotEmpty(loadOptions[i])) {
+                        args[i] = JSON.stringify(loadOptions[i]);
+                    }
+                });
+                $.ajax({
+                    url: 'https://localhost:7230/treelist/GetData',
+                    dataType: 'json',
+                    data: args,
+                    success(result) {
+                        console.log(result);
+                        deferred.resolve(result.data, {
+                            totalCount: result.totalCount,
+                            summary: result.summary,
+                            groupCount: result.groupCount,
+                        });
+                    },
+                    error() {
+                        deferred.reject('Data Loading Error');
+                    },
+                    timeout: 5000,
+                });
+
+                return deferred.promise();
+            },
+        });
+
+        var treeList = $('#gridContainer').dxTreeList({
+            dataSource: store,
+            selection: {
+                mode: "multiple",
+                selectAllMode: 'page',
+                recursive: false,
+            },
+            keyExpr: 'id',
+            parentIdExpr: 'parentId',
+            paging: {
+                pageSize: 10,
+            },
+            pager: {
+                showPageSizeSelector: true,
+                allowedPageSizes: [10, 25, 50, 100],
+            },
+            filterRow: {
+                visible: true,
+            },
+            headerFilter: {
+                visible: true,
+            },
+            filterPanel: {
+                visible: true,
+            },
+            columnChooser: {
+                enabled: true,
+            },
+            loadPanel: {
+                enabled: true,
+            },
+            remoteOperations: {
+                filtering: true,
+                filteringRow: true,
+                paging: true,
+                sorting: true,
+                groupPaging: true,
+                grouping: true,
+                summary: true
+            },
+            searchPanel: {
+                visible: true,
+                highlightCaseSensitive: true,
+            },
+            //groupPanel: { visible: true },
+            //grouping: {
+            //    autoExpandAll: false,
+            //},
+            focusedRowEnabled: true,
+            allowColumnReordering: true,
+            allowColumnResizing: true,
+            columnResizingMode: 'widget',
+            //columnResizingMode: 'nextColumn',
+
+            rowAlternationEnabled: true,
+            showBorders: true,
+            export: {
+                enabled: true,
+                formats: ['pdf', 'xlsx'],
+
+                //allowExportSelectedData: true,
+                //allowExportFocusedRowData: true,
+            },
+            onRowExpanding: function (e) {
+                var expandingRowKey = e.key;
+
+                // Get the row data for the expanding row
+                var expandingRowData = e.component.getNodeByKey(expandingRowKey);
+
+                // Recursively find and select child rows
+                function selectChildRows(data) {
+                    if (data.children) {
+                        data.children.forEach(function (childData) {
+                            treeList.selectRows(childData.key, true); // Set the second parameter to true to add to the selection
+                            selectChildRows(childData);
+                        });
+                    }
+                }
+
+                selectChildRows(expandingRowData);
+
+            },
+            onSelectionChanged: function (e) {
+                var selectedRowKeys = e.component.getSelectedRowKeys();
+                var parentKey = selectedRowKeys[0];
+                // Manually select/deselect the immediate children based on the selection state of the parent row
+
+                    var parentRow = e.component.getNodeByKey(parentKey);
+                    console.log(parentRow)
+                    if (parentRow && parentRow.children) {
+                        var immediateChildKeys = parentRow.children.map(function (child) {
+                            return child.key;
+                        });
+                        var isParentSelected = e.component.isRowSelected(selectedRowKeys);
+
+                        e.component.selectRows(immediateChildKeys, !isParentSelected);
+                    }else{
+                        e.component.selectRows(immediateChildKeys, e.component.isRowSelected(selectedRowKeys));
+                    }
+     
+
+            },
+            onExporting(e) {
+                switch (e.format) {
+                    case "pdf":
+                        const doc = new jsPDF();
+
+                        DevExpress.pdfExporter.exportDataGrid({
+                            jsPDFDocument: doc,
+                            component: e.component,
+                            indent: 5,
+                        }).then(() => {
+                            doc.save('Companies.pdf');
+                        });
+                        break;
+                    case "xlsx":
+                        const workbook = new ExcelJS.Workbook();
+                        const worksheet = workbook.addWorksheet('Employees');
+
+                        DevExpress.excelExporter.exportDataGrid({
+                            component: e.component,
+                            worksheet,
+                            autoFilterEnabled: true,
+                        }).then(() => {
+                            workbook.xlsx.writeBuffer().then((buffer) => {
+                                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
+                            });
+                        });
+                        e.cancel = true;
+                        break;
+                }
+            },
+
+            columns: [
+                {
+                    dataField: 'permalinkAz',
+                },
+                {
+                    dataField: 'nameAz',
+                },
+                {
+                    dataField: 'menuIcon',
+                },
+                {
+                    dataField: 'controller',
+                },
+                {
+                    dataField: 'action',
+                },
+                {
+                    dataField: 'area',
+                },
+                {
+                    dataField: 'textAz',
+                },
+                {
+                    dataField: 'active',
+                },
+            ],
+        }).dxTreeList("instance");
+
+
+        window.jsPDF = window.jspdf.jsPDF;
+        var dxTreeList = $('#gridContainer').dxTreeList('instance');
+        $("#exportExcelBtn").click(function (e) {
+            dxTreeList.exportToExcel(false);
+        });
+        $("#exportPdfBtn").click(function (e) {
+            const doc = new jsPDF();
+            DevExpress.pdfExporter.exportDataGrid({
+                jsPDFDocument: doc,
+                component: dxTreeList
+            }).then(function () {
+                doc.save('Customers.pdf');
+            });
+        });
+
+        $("#getSelectedRows").click(function (e) {
+            var allRows = treeList.getVisibleRows();
+            var selectedRows = [];
+            for (var i = 0; i < allRows.length; i++) {
+                var row = allRows[i];
+                var rowKey = row.key;
+
+                var isRowSelected = treeList.isRowSelected(rowKey);
+                if (isRowSelected)
+                    selectedRows.push(rowKey)
+            }
+            console.log(selectedRows)
+        });
+    });
+</script>

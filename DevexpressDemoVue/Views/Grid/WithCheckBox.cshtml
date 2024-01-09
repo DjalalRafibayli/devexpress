@@ -1,0 +1,262 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/devextreme/js/cldr/event.min.js"></script>
+<script src="~/devextreme/js/cldr/supplemental.min.js"></script>
+<script src="~/devextreme/js/cldr/unresolved.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/devextreme/css/dx.light.css" />
+<script src="~/devextreme/js/dx.all.js"></script>
+<script src="~/devextreme/js/exceljs.min.js"></script>
+<script src="~/devextreme/js/jspdf.umd.min.js"></script>
+<script src="~/devextreme/js/filesaver.min.js"></script>
+<div class="container">
+    <button id="exportExcelBtn">Export Excel</button>
+    <button id="exportPdfBtn">Export Pdf</button>
+    <button id="getSelectedRows">Get Selected Rows</button>
+    <div id="gridContainer"></div>
+</div>
+<script>
+    $(() => {
+        window.jsPDF = window.jspdf.jsPDF;
+        function isNotEmpty(value) {
+            return value !== undefined && value !== null && value !== '';
+        }
+        const store = new DevExpress.data.CustomStore({
+            key: 'id',
+            load(loadOptions) {
+                const deferred = $.Deferred();
+                const args = {};
+
+                [
+                    'skip',
+                    'take',
+                    'requireTotalCount',
+                    'requireGroupCount',
+                    'sort',
+                    'filter',
+                    'totalSummary',
+                    'group',
+                    'groupSummary',
+                ].forEach((i) => {
+                    if (i in loadOptions && isNotEmpty(loadOptions[i])) {
+                        args[i] = JSON.stringify(loadOptions[i]);
+                    }
+                });
+                $.ajax({
+                    url: 'https://localhost:7230/home/GetData',
+                    dataType: 'json',
+                    data: args,
+                    success(result) {
+                        console.log(result);
+                        deferred.resolve(result.data, {
+                            totalCount: result.totalCount,
+                            summary: result.summary,
+                            groupCount: result.groupCount,
+                        });
+                    },
+                    error() {
+                        deferred.reject('Data Loading Error');
+                    },
+                    timeout: 5000,
+                });
+
+                return deferred.promise();
+            },
+        });
+
+        $('#gridContainer').dxDataGrid({
+            dataSource: store,
+            selection: {
+                mode: 'multiple',
+                selectAllMode: 'page'
+                //selectAllMode:'allPages'
+            },
+            paging: {
+                pageSize: 10,
+            },
+            pager: {
+                showPageSizeSelector: true,
+                allowedPageSizes: [10, 25, 50, 100],
+            },
+            filterRow: {
+                visible: true,
+            },
+            headerFilter: {
+                visible: true,
+            },
+            filterPanel: {
+                visible: true,
+            },
+            columnChooser: {
+                enabled: true,
+            },
+            loadPanel: {
+                enabled: true,
+            },
+            remoteOperations: {
+                filtering: true,
+                filteringRow: true,
+                paging: true,
+                sorting: true,
+                groupPaging: true,
+                grouping: true,
+                summary: true
+            },
+            searchPanel: {
+                visible: true,
+                highlightCaseSensitive: true,
+            },
+            //groupPanel: { visible: true },
+            //grouping: {
+            //    autoExpandAll: false,
+            //},
+            focusedRowEnabled: true,
+            allowColumnReordering: true,
+            allowColumnResizing: true,
+            columnResizingMode: 'widget',
+            //columnResizingMode: 'nextColumn',
+
+            rowAlternationEnabled: true,
+            showBorders: true,
+            export: {
+                enabled: true,
+                formats: ['pdf', 'xlsx'],
+
+                //allowExportSelectedData: true,
+                //allowExportFocusedRowData: true,
+            },
+            onExporting(e) {
+                switch (e.format) {
+                    case "pdf":
+                        const doc = new jsPDF();
+
+                        DevExpress.pdfExporter.exportDataGrid({
+                            jsPDFDocument: doc,
+                            component: e.component,
+                            indent: 5,
+                        }).then(() => {
+                            doc.save('Companies.pdf');
+                        });
+                        break;
+                    case "xlsx":
+                        const workbook = new ExcelJS.Workbook();
+                        const worksheet = workbook.addWorksheet('Employees');
+
+                        DevExpress.excelExporter.exportDataGrid({
+                            component: e.component,
+                            worksheet,
+                            autoFilterEnabled: true,
+                        }).then(() => {
+                            workbook.xlsx.writeBuffer().then((buffer) => {
+                                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
+                            });
+                        });
+                        e.cancel = true;
+                        break;
+                }
+            },
+
+            columns: [
+                {
+                    dataField: 'name',
+                },
+                {
+                    dataField: 'imagePath',
+                },
+                {
+                    dataField: 'trailerUrl',
+                },
+                {
+                    dataField: 'preview',
+                },
+                {
+                    dataField: 'like',
+                },
+                {
+                    dataField: 'rating',
+                },
+                {
+                    dataField: 'relaseDate',
+                    dataType: 'date',
+                },
+                {
+                    dataField: 'category',
+                },
+                {
+                    dataField: 'isActive',
+                },
+                {
+                    caption:'Custom Button',
+                    type: "buttons  ", // This column will contain buttons
+                    buttons: [{
+                        text: "Custom Button", // Button text
+                        cssClass: 'btn btn-info',
+                        onClick: function (e) {
+                            // Handle button click event for the row
+                            var rowData = e.row.data;
+                            console.log("Button clicked for row with ID:", rowData.id);
+                        }
+                    }]
+                },
+                {
+                    caption: "Custom Button",
+                    cellTemplate: function (container, options) {
+                        // Create a Bootstrap button and add it to the cell container
+                        $("<button>")
+                            .addClass("btn btn-primary") // Add Bootstrap classes
+                            .text("Click Me") // Button text
+                            .on("click", function (e) {
+                                // Custom button click event handling
+                                // You can access the row data using options.data
+                                console.log("Button clicked for row data:", options.data);
+                            })
+                            .appendTo(container);
+                    }
+                },
+                {
+                    caption: 'Actions',
+                    cellTemplate: function (cellElement, cellInfo) {
+                        var dxButton = new DevExpress.ui.dxButton(cellElement, {
+                            text: 'Delete',
+                            cssClass: 'btn btn-danger',
+                            onClick: function () {
+                                // Perform the delete action using the row data
+                                var rowData = cellInfo.data;
+                                console.log('Delete row with ID:', rowData.id);
+                                // Implement your delete logic here
+                            }
+                        });
+                    }
+
+                }
+            ],
+        });
+
+    });
+
+
+    $(() => {
+        window.jsPDF = window.jspdf.jsPDF;
+        var dataGrid = $('#gridContainer').dxDataGrid('instance');
+        $("#exportExcelBtn").click(function (e) {
+            dataGrid.exportToExcel(false);
+        });
+        $("#exportPdfBtn").click(function (e) {
+            const doc = new jsPDF();
+            DevExpress.pdfExporter.exportDataGrid({
+                jsPDFDocument: doc,
+                component: dataGrid
+            }).then(function () {
+                doc.save('Customers.pdf');
+            });
+        });
+
+        $("#getSelectedRows").click(function (e) {
+            var selectedRowsData = dataGrid.getSelectedRowsData();
+            console.log(selectedRowsData)
+        });
+    });
+    let collapsed = false;
+</script>

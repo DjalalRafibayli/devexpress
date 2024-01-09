@@ -1,0 +1,244 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/devextreme/js/cldr/event.min.js"></script>
+<script src="~/devextreme/js/cldr/supplemental.min.js"></script>
+<script src="~/devextreme/js/cldr/unresolved.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/devextreme/css/dx.light.css" />
+<script src="~/devextreme/js/dx.all.js"></script>
+<script src="~/devextreme/js/exceljs.min.js"></script>
+<script src="~/devextreme/js/jspdf.umd.min.js"></script>
+<script src="~/devextreme/js/filesaver.min.js"></script>
+<div class="demo-container">
+    <button id="exportExcelBtn">Export Excel</button>
+    <button id="exportPdfBtn">Export Pdf</button>
+    <div id="gridContainer"></div>
+</div>
+<script>
+    $(() => {
+        window.jsPDF = window.jspdf.jsPDF;
+        function isNotEmpty(value) {
+            return value !== undefined && value !== null && value !== '';
+        }
+        const store = new DevExpress.data.CustomStore({
+            key: 'id',
+            load(loadOptions) {
+                const deferred = $.Deferred();
+                const args = {};
+
+                [
+                    'skip',
+                    'take',
+                    'requireTotalCount',
+                    'requireGroupCount',
+                    'sort',
+                    'filter',
+                    'totalSummary',
+                    'group',
+                    'groupSummary',
+                ].forEach((i) => {
+                    if (i in loadOptions && isNotEmpty(loadOptions[i])) {
+                        args[i] = JSON.stringify(loadOptions[i]);
+                    }
+                });
+                $.ajax({
+                    url: 'https://localhost:7230/home/GetData',
+                    dataType: 'json',
+                    data: args,
+                    success(result) {
+                        console.log(result);
+                        deferred.resolve(result.data, {
+                            totalCount: result.totalCount,
+                            summary: result.summary,
+                            groupCount: result.groupCount,
+                        });
+                    },
+                    error() {
+                        deferred.reject('Data Loading Error');
+                    },
+                    //timeout: 5000,
+                });
+
+                return deferred.promise();
+            },
+        });
+
+        $('#gridContainer').dxDataGrid({
+            dataSource: store,
+            paging: {
+                pageSize: 10,
+            },
+            pager: {
+                showPageSizeSelector: true,
+                allowedPageSizes: [10, 25, 50, 100],
+            },
+            filterRow: {
+                visible: true,
+            },
+            headerFilter: {
+                visible: true,
+            },
+            filterPanel: {
+                visible: true,
+            },
+            columnChooser: {
+                enabled: true,
+            },
+            loadPanel: {
+                enabled: true,
+            },
+            remoteOperations: {
+                filtering: true,
+                filteringRow: true,
+                paging: true,
+                sorting: true,
+                groupPaging: true,
+                grouping: true,
+                summary: true
+            },
+            searchPanel: {
+                visible: true,
+                highlightCaseSensitive: true,
+            },
+            //groupPanel: { visible: true },
+            //grouping: {
+            //    autoExpandAll: false,
+            //},
+            focusedRowEnabled: true,
+            allowColumnReordering: true,
+            allowColumnResizing: true,
+            columnResizingMode: 'widget',
+            //columnResizingMode: 'nextColumn',
+
+            rowAlternationEnabled: true,
+            showBorders: true,
+            export: {
+                enabled: true,
+                formats: ['pdf', 'xlsx'],
+
+                //allowExportSelectedData: true,
+                //allowExportFocusedRowData: true,
+            },
+            onExporting(e) {
+                switch (e.format) {
+                    case "pdf":
+                        const doc = new jsPDF();
+
+                        DevExpress.pdfExporter.exportDataGrid({
+                            jsPDFDocument: doc,
+                            component: e.component,
+                            indent: 5,
+                        }).then(() => {
+                            doc.save('Companies.pdf');
+                        });
+                        break;
+                    case "xlsx":
+                        const workbook = new ExcelJS.Workbook();
+                        const worksheet = workbook.addWorksheet('Employees');
+
+                        DevExpress.excelExporter.exportDataGrid({
+                            component: e.component,
+                            worksheet,
+                            autoFilterEnabled: true,
+                        }).then(() => {
+                            workbook.xlsx.writeBuffer().then((buffer) => {
+                                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
+                            });
+                        });
+                        e.cancel = true;
+                        break;
+                }
+            },
+
+            columns: [
+                {
+                    dataField: 'name',
+                },
+                {
+                    dataField: 'imagePath',
+                },
+                {
+                    dataField: 'trailerUrl',
+                },
+                {
+                    dataField: 'preview',
+                },
+                {
+                    dataField: 'like',
+                },
+                {
+                    dataField: 'rating',
+                },
+                {
+                    dataField: 'relaseDate',
+                    dataType: 'date',
+                },
+                {
+                    dataField: 'category',
+                },
+                {
+                    dataField: 'isActive',
+                },
+
+            ],
+            //onContentReady(e) {
+            //    if (!collapsed) {
+            //        collapsed = true;
+            //        e.component.expandRow(['EnviroCare']);
+            //    }
+            //},
+        });
+    });
+
+    const discountCellTemplate = function (container, options) {
+        $('<div/>').dxBullet({
+            onIncidentOccurred: null,
+            size: {
+                width: 150,
+                height: 35,
+            },
+            margin: {
+                top: 5,
+                bottom: 0,
+                left: 5,
+            },
+            showTarget: false,
+            showZeroLevel: true,
+            value: options.value * 100,
+            startScaleValue: 0,
+            endScaleValue: 100,
+            tooltip: {
+                enabled: true,
+                font: {
+                    size: 18,
+                },
+                paddingTopBottom: 2,
+                customizeTooltip() {
+                    return { text: options.text };
+                },
+                zIndex: 5,
+            },
+        }).appendTo(container);
+    };
+    $(() => {
+        window.jsPDF = window.jspdf.jsPDF;
+        var dataGrid = $('#gridContainer').dxDataGrid('instance');
+        $("#exportExcelBtn").click(function (e) {
+            dataGrid.exportToExcel(false);
+        });
+        $("#exportPdfBtn").click(function (e) {
+            const doc = new jsPDF();
+            DevExpress.pdfExporter.exportDataGrid({
+                jsPDFDocument: doc,
+                component: dataGrid
+            }).then(function () {
+                doc.save('Customers.pdf');
+            });
+        });
+    });
+    let collapsed = false;
+</script>
