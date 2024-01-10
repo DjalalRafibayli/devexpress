@@ -73,7 +73,7 @@ namespace Api.Controllers
 			var responseModel = new DxGridResponseModel<Movie>
 			{
 				data = responseQuery.ToList(),
-				totalCount = 11
+				totalCount = 13
 			};
 			return responseModel;
 		}

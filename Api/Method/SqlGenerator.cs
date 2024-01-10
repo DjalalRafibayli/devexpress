@@ -8,10 +8,21 @@ namespace Api.Method
 	{
 		public static string Generate(GridDxModel model, string TableName)
 		{
-			return $"SELECT * FROM {TableName} WHERE 1=1 " +
-				model.Filter ?? " and " + GenerateSqlQueryFilter(model.Filter) +
-				model.Sort ?? GenerateSort(model.Sort) +
-				FetchRow((int)model.Skip, (int)model.Take);
+			string sqlQuery = $"SELECT * FROM {TableName} WHERE 1=1";
+
+			if (!string.IsNullOrEmpty(model.Filter))
+			{
+				sqlQuery += $" and {GenerateSqlQueryFilter(model.Filter)}";
+			}
+
+			if (model.Sort is not null)
+			{
+				sqlQuery += $" {GenerateSort(model.Sort)}";
+			}
+
+			sqlQuery += FetchRow((int)model.Skip, (int)model.Take);
+
+			return sqlQuery;
 		}
 		static string GenerateSqlQueryFilter(string json)
 		{
