@@ -1,13 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "Med7YWJ5ZqA+UZmgv5tU88bKoqTnkU+C96XftOal0Mln1aLtLStN2wQE+o/r39LSDVGdj+hAHLKjmf9+SPHknQ==",
+  "dgSpecHash": "bubSwhhXnQTcEPxPvGBSfMCJuPTquGR6wQPtpQhMG2OwxZ610/biTAxN0MMym8ja3PEvTxJckUJNyywBsN1ucQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\DevextremeApi\\DevextremeApi.csproj",
+  "projectFilePath": "C:\\Projects\\p\\devexpress\\DevextremeApi\\DevextremeApi.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\User\\.nuget\\packages\\devextreme.aspnet.core\\22.2.6\\devextreme.aspnet.core.22.2.6.nupkg.sha512",
-    "C:\\Users\\User\\.nuget\\packages\\devextreme.aspnet.data\\2.9.0\\devextreme.aspnet.data.2.9.0.nupkg.sha512",
-    "C:\\Users\\User\\.nuget\\packages\\microsoft.csharp\\4.4.0\\microsoft.csharp.4.4.0.nupkg.sha512",
-    "C:\\Users\\User\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512"
+    "C:\\Users\\j.t.rafibayli\\.nuget\\packages\\devextreme.aspnet.core\\23.2.3\\devextreme.aspnet.core.23.2.3.nupkg.sha512",
+    "C:\\Users\\j.t.rafibayli\\.nuget\\packages\\devextreme.aspnet.data\\3.0.0\\devextreme.aspnet.data.3.0.0.nupkg.sha512",
+    "C:\\Users\\j.t.rafibayli\\.nuget\\packages\\microsoft.csharp\\4.4.0\\microsoft.csharp.4.4.0.nupkg.sha512",
+    "C:\\Users\\j.t.rafibayli\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512"
   ],
   "logs": []
 }

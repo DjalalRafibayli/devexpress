@@ -2,10 +2,10 @@
   "version": 3,
   "targets": {
     "net6.0": {
-      "DevExtreme.AspNet.Core/22.2.6": {
+      "DevExtreme.AspNet.Core/23.2.3": {
         "type": "package",
         "dependencies": {
-          "DevExtreme.AspNet.Data": "2.0.0",
+          "DevExtreme.AspNet.Data": "3.0.0",
           "Newtonsoft.Json": "13.0.2"
         },
         "compile": {
@@ -22,19 +22,19 @@
           "Microsoft.AspNetCore.App"
         ]
       },
-      "DevExtreme.AspNet.Data/2.9.0": {
+      "DevExtreme.AspNet.Data/3.0.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.CSharp": "4.4.0",
-          "Newtonsoft.Json": "13.0.1"
+          "Newtonsoft.Json": "13.0.2"
         },
         "compile": {
-          "lib/netstandard2.0/DevExtreme.AspNet.Data.dll": {
+          "lib/net6.0/DevExtreme.AspNet.Data.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/DevExtreme.AspNet.Data.dll": {
+          "lib/net6.0/DevExtreme.AspNet.Data.dll": {
             "related": ".xml"
           }
         }
@@ -64,34 +64,34 @@
     }
   },
   "libraries": {
-    "DevExtreme.AspNet.Core/22.2.6": {
-      "sha512": "VY7gLillh+fyOE1S6j2RtocON+0t+einJ1dzdMcSnermqekEltuHwX+CvFIjrrxQJPbQwKjB9zeyniUQMQZtuw==",
+    "DevExtreme.AspNet.Core/23.2.3": {
+      "sha512": "M9q8roNxqS8ux8NpPgqtbWXv7zBlpd+XLHU3H6aTDe2z55HAmCJDv7pmJwccCrbS1kzuBouZriMbugVVJiiawA==",
       "type": "package",
-      "path": "devextreme.aspnet.core/22.2.6",
+      "path": "devextreme.aspnet.core/23.2.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.txt",
-        "devextreme.aspnet.core.22.2.6.nupkg.sha512",
+        "devextreme.aspnet.core.23.2.3.nupkg.sha512",
         "devextreme.aspnet.core.nuspec",
         "dxlogo.png",
         "lib/net6.0/DevExtreme.AspNet.Core.dll",
         "lib/net6.0/DevExtreme.AspNet.Core.xml"
       ]
     },
-    "DevExtreme.AspNet.Data/2.9.0": {
-      "sha512": "C3cdpuuCUTsR6r27xb097xco8+Unw0NEKKfPTSUsM0TcQ6CZqURurGKVVj5jVcKrFbzoJQZCZnpvzF7vCVqqbw==",
+    "DevExtreme.AspNet.Data/3.0.0": {
+      "sha512": "65Tdo835fKRLi8T4h9VlpohSeLsg/33ebPVE7b7hOCzxHlGFl1KsEnqbeL+/4f8HkA6MAK1/rL5n+Y0GitBBcA==",
       "type": "package",
-      "path": "devextreme.aspnet.data/2.9.0",
+      "path": "devextreme.aspnet.data/3.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "devextreme.aspnet.data.2.9.0.nupkg.sha512",
+        "devextreme.aspnet.data.3.0.0.nupkg.sha512",
         "devextreme.aspnet.data.nuspec",
         "lib/net452/DevExtreme.AspNet.Data.dll",
         "lib/net452/DevExtreme.AspNet.Data.xml",
-        "lib/netstandard2.0/DevExtreme.AspNet.Data.dll",
-        "lib/netstandard2.0/DevExtreme.AspNet.Data.xml"
+        "lib/net6.0/DevExtreme.AspNet.Data.dll",
+        "lib/net6.0/DevExtreme.AspNet.Data.xml"
       ]
     },
     "Microsoft.CSharp/4.4.0": {
@@ -193,29 +193,29 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "DevExtreme.AspNet.Core >= 22.2.6",
-      "DevExtreme.AspNet.Data >= 2.9.0"
+      "DevExtreme.AspNet.Core >= 23.2.3",
+      "DevExtreme.AspNet.Data >= 3.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {},
+    "C:\\Users\\j.t.rafibayli\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\DevexpressDemoVue\\DevexpressDemoVue.csproj",
+      "projectUniqueName": "C:\\Projects\\p\\devexpress\\DevexpressDemoVue\\DevexpressDemoVue.csproj",
       "projectName": "DevexpressDemoVue",
-      "projectPath": "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\DevexpressDemoVue\\DevexpressDemoVue.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\DevexpressDemoVue\\obj\\",
+      "projectPath": "C:\\Projects\\p\\devexpress\\DevexpressDemoVue\\DevexpressDemoVue.csproj",
+      "packagesPath": "C:\\Users\\j.t.rafibayli\\.nuget\\packages\\",
+      "outputPath": "C:\\Projects\\p\\devexpress\\DevexpressDemoVue\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\NuGet.Config",
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Projects\\p\\devexpress\\NuGet.Config",
+        "C:\\Users\\j.t.rafibayli\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -224,7 +224,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\DevExpress 22.2\\DevExtreme\\System\\DevExtreme\\Bin\\AspNetCore": {},
+        "C:\\Program Files\\DevExpress 23.2\\DevExtreme\\System\\DevExtreme\\Bin\\AspNetCore": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -245,11 +245,11 @@
         "dependencies": {
           "DevExtreme.AspNet.Core": {
             "target": "Package",
-            "version": "[22.2.6, )"
+            "version": "[23.2.3, )"
           },
           "DevExtreme.AspNet.Data": {
             "target": "Package",
-            "version": "[2.9.0, )"
+            "version": "[3.0.0, )"
           }
         },
         "imports": [

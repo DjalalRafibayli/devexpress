@@ -1,24 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\DevexpressDemoVue\\DevexpressDemoVue.csproj": {}
+    "C:\\Projects\\p\\devexpress\\DevexpressDemoVue\\DevexpressDemoVue.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\DevexpressDemoVue\\DevexpressDemoVue.csproj": {
+    "C:\\Projects\\p\\devexpress\\DevexpressDemoVue\\DevexpressDemoVue.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\DevexpressDemoVue\\DevexpressDemoVue.csproj",
+        "projectUniqueName": "C:\\Projects\\p\\devexpress\\DevexpressDemoVue\\DevexpressDemoVue.csproj",
         "projectName": "DevexpressDemoVue",
-        "projectPath": "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\DevexpressDemoVue\\DevexpressDemoVue.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\DevexpressDemoVue\\obj\\",
+        "projectPath": "C:\\Projects\\p\\devexpress\\DevexpressDemoVue\\DevexpressDemoVue.csproj",
+        "packagesPath": "C:\\Users\\j.t.rafibayli\\.nuget\\packages\\",
+        "outputPath": "C:\\Projects\\p\\devexpress\\DevexpressDemoVue\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\User\\source\\repos\\DevexpressDemoVue\\NuGet.Config",
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Projects\\p\\devexpress\\NuGet.Config",
+          "C:\\Users\\j.t.rafibayli\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -27,7 +27,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\DevExpress 22.2\\DevExtreme\\System\\DevExtreme\\Bin\\AspNetCore": {},
+          "C:\\Program Files\\DevExpress 23.2\\DevExtreme\\System\\DevExtreme\\Bin\\AspNetCore": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -48,11 +48,11 @@
           "dependencies": {
             "DevExtreme.AspNet.Core": {
               "target": "Package",
-              "version": "[22.2.6, )"
+              "version": "[23.2.3, )"
             },
             "DevExtreme.AspNet.Data": {
               "target": "Package",
-              "version": "[2.9.0, )"
+              "version": "[3.0.0, )"
             }
           },
           "imports": [

@@ -24,7 +24,7 @@
         public int take { get; set; }
         public List<Sort> sort { get; set; }
         public List<Group> group { get; set; }
-        public List<object> filter { get; set; }
+        public string filter { get; set; }
         public List<TotalSummary> totalSummary { get; set; }
         public List<GroupSummary> groupSummary { get; set; }
         public List<string> select { get; set; }
