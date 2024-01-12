@@ -1,9 +1,13 @@
-﻿using DevexpressDemoVue.Models;
+﻿using DevexpressDemoVue.DxModel;
+using DevexpressDemoVue.Models;
+using DevexpressDemoVue.Models.Entity;
 using DevexpressDemoVue.Service;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace DevexpressDemoVue.Controllers
 {
@@ -26,13 +30,13 @@ namespace DevexpressDemoVue.Controllers
         {
             return View();
         }
-        [HttpGet]
-        public async Task<object> GetData(DataSourceLoadOptions loadOptions)
+        [HttpPost]
+        public async Task<object> GetData([FromBody] GridDxModel loadOptions)
         {
             var resp = await _responseGetaway.SendTAsync(loadOptions, "api/Movies/GetData", HttpMethod.Post);
             //var resp = await _responseGetaway.SendTAsync(loadOptions, "api/Home/GetData", HttpMethod.Post);
 
-            return resp;
+            return Json(JsonConvert.DeserializeObject<DxGridResponseModel<Movie>>(resp));
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

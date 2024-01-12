@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DevexpressDemoVue")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6f92fdef8f3a44ca019cf7f32db152d6a5b03814")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6ad195808cea6821fda3087db77bfdb599284076")]
 [assembly: System.Reflection.AssemblyProductAttribute("DevexpressDemoVue")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DevexpressDemoVue")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -18,12 +18,59 @@
     <button id="exportPdfBtn">Export Pdf</button>
     <div id="gridContainer"></div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.min.js" integrity="sha512-TjBzDQIDnc6pWyeM1bhMnDxtWH0QpOXMcVooglXrali/Tj7W569/wd4E8EDjk1CwOAOPSJon1VfcEt1BI4xIrA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(() => {
         window.jsPDF = window.jspdf.jsPDF;
         function isNotEmpty(value) {
             return value !== undefined && value !== null && value !== '';
         }
+        // const store = new DevExpress.data.CustomStore({
+        //     key: 'id',
+        //     load(loadOptions) {
+        //         const deferred = $.Deferred();
+        //         const args = {};
+
+        //         [
+        //             'skip',
+        //             'take',
+        //             'requireTotalCount',
+        //             'requireGroupCount',
+        //             'sort',
+        //             'filter',
+        //             'totalSummary',
+        //             'group',
+        //             'groupSummary',
+        //         ].forEach((i) => {
+        //             if (i in loadOptions && isNotEmpty(loadOptions[i])) {
+        //                 args[i] = loadOptions[i];
+        //             }
+        //         });
+        //         $.ajax({
+        //             url: 'https://localhost:7230/home/GetData',
+        //             contentType: 'application/json', // Set the content type
+        //             dataType: 'json',
+        //             traditional: true,
+        //             type: "POST",
+        //             data: JSON.stringify(args),
+        //             success(result) {
+        //                 alert('aha')
+        //                 console.log(result.data);
+        //                 deferred.resolve(result.data, {
+        //                     totalCount: result.totalCount,
+        //                     summary: result.summary,
+        //                     groupCount: result.groupCount,
+        //                 });
+        //             },
+        //             error() {
+        //                 deferred.reject('Data Loading Error');
+        //             },
+        //             //timeout: 5000,
+        //         });
+
+        //         return deferred.promise();
+        //     },
+        // });
         const store = new DevExpress.data.CustomStore({
             key: 'id',
             load(loadOptions) {
@@ -42,30 +89,41 @@
                     'groupSummary',
                 ].forEach((i) => {
                     if (i in loadOptions && isNotEmpty(loadOptions[i])) {
-                        args[i] = JSON.stringify(loadOptions[i]);
+                        // if (i == 'filter') { 
+                        //     args[i] = JSON.stringify(loadOptions[i]);
+                        //     alert(args[i])
+                        // }else {
+                            args[i] = loadOptions[i];
+                        // }
                     }
                 });
-                $.ajax({
-                    url: 'https://localhost:7230/home/GetData',
-                    dataType: 'json',
-                    data: args,
-                    success(result) {
-                        console.log(result);
-                        deferred.resolve(result.data, {
-                            totalCount: result.totalCount,
-                            summary: result.summary,
-                            groupCount: result.groupCount,
+                // Using Axios to send the request
+                axios.post('https://localhost:7230/home/GetData', args, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(response => {
+                        console.log(response.data);
+
+                        // Resolve the deferred promise with the received data
+                        deferred.resolve(response.data, {
+                            totalCount: response.data.totalCount,
+                            summary: response.data.summary,
+                            groupCount: response.data.groupCount,
                         });
-                    },
-                    error() {
+                    })
+                    .catch(error => {
+                        console.error('Data Loading Error', error);
+
+                        // Reject the deferred promise in case of an error
                         deferred.reject('Data Loading Error');
-                    },
-                    //timeout: 5000,
-                });
+                    });
 
                 return deferred.promise();
             },
         });
+
 
         $('#gridContainer').dxDataGrid({
             dataSource: store,

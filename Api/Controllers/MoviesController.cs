@@ -51,7 +51,7 @@ namespace Api.Controllers
 		//    }
 
 		//    // Apply paging
-		//    var retrunedMovies = movies.Skip(loadOptions.Skip).Take(loadOptions.Take);
+		//    var retrunedMovies = movies.Skip(loadOptions.Skip). Take(loadOptions.Take);
 
 		//    var loadResult = new
 		//    {
@@ -69,13 +69,14 @@ namespace Api.Controllers
 			var sql = SqlGenerator.Generate(loadOptions, "Movies");
 			var c = _dapperContext.CreateConnection();
 
-			var responseQuery = c.Query<Movie>(sql);
+			var responseQuery = c.Query<Movie>(sql.sqlQuery);
+			var responseQueryForCount = c.QuerySingle<int>(sql.totalCountQuery);
 			var responseModel = new DxGridResponseModel<Movie>
 			{
 				data = responseQuery.ToList(),
-				totalCount = 13
-			};
-			return responseModel;
+                totalCount = responseQueryForCount
+            };
+			return Json(responseModel);
 		}
 		//public object GetData(DataSourceLoadOptionsBase loadOptions)
 		//{

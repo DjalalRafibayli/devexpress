@@ -1,4 +1,7 @@
-﻿namespace DevexpressDemoVue.DxModel
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace DevexpressDemoVue.DxModel
 {
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class Group
@@ -17,14 +20,26 @@
 
     public class GridDxModel
     {
+
+
         public bool requireTotalCount { get; set; }
         public bool requireGroupCount { get; set; }
         public bool isCountQuery { get; set; }
-        public int skip { get; set; }
-        public int take { get; set; }
-        public List<Sort> sort { get; set; }
+        public int Skip { get; set; }
+        public int Take { get; set; }
+        public List<Sort> Sort { get; set; }
         public List<Group> group { get; set; }
-        public string filter { get; set; }
+        private object? filter;
+
+        public object? Filter
+        {
+            get => filter == null ? null : JsonConvert.DeserializeObject(filter.ToString()).ToString();
+            set
+            {
+                filter = value;
+            }
+        }
+
         public List<TotalSummary> totalSummary { get; set; }
         public List<GroupSummary> groupSummary { get; set; }
         public List<string> select { get; set; }
