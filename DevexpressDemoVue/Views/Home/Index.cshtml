@@ -89,11 +89,11 @@
                     'groupSummary',
                 ].forEach((i) => {
                     if (i in loadOptions && isNotEmpty(loadOptions[i])) {
-                        // if (i == 'filter') { 
+                        // if (i == 'filter') {
                         //     args[i] = JSON.stringify(loadOptions[i]);
                         //     alert(args[i])
                         // }else {
-                            args[i] = loadOptions[i];
+                        args[i] = loadOptions[i];
                         // }
                     }
                 });
@@ -156,7 +156,21 @@
                 sorting: true,
                 groupPaging: true,
                 grouping: true,
+                // grouping: {
+                //     contextMenuEnabled: true
+                // },
+                // groupPanel: {
+                //     visible: true,   // or "auto"
+                //     allowColumnDragging: true
+                // },
                 summary: true
+            },
+            grouping: {
+                contextMenuEnabled: true
+            },
+            groupPanel: {
+                visible: true,   // or "auto"
+                allowColumnDragging: true
             },
             searchPanel: {
                 visible: true,

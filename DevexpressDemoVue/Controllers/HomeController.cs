@@ -25,6 +25,10 @@ namespace DevexpressDemoVue.Controllers
         {
             return View();
         }
+        public IActionResult Dev()
+        {
+            return View();
+        }
 
         public IActionResult Privacy()
         {
@@ -37,6 +41,13 @@ namespace DevexpressDemoVue.Controllers
             //var resp = await _responseGetaway.SendTAsync(loadOptions, "api/Home/GetData", HttpMethod.Post);
 
             return Json(JsonConvert.DeserializeObject<DxGridResponseModel<Movie>>(resp));
+        }
+        [HttpGet]
+        public async Task<object> GetDataDev(DataSourceLoadOptions loadOptions)
+        {
+            var resp = await _responseGetaway.SendTAsync(loadOptions, "api/Dev/GetData", HttpMethod.Post);
+
+            return resp;
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

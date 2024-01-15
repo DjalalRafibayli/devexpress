@@ -1,6 +1,9 @@
 ﻿using Api.Models.Dx;
+using DevExtreme.AspNet.Mvc.Builders;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Api.Method
 {
@@ -8,6 +11,12 @@ namespace Api.Method
     {
         public static (string sqlQuery, string totalCountQuery) Generate(GridDxModel model, string TableName)
         {
+            if (model.Group?.Count() > 0)
+            {
+                return (GroupByExpression(model.Group, TableName), string.Empty);
+            }
+
+
             string sqlQuery = $"SELECT * FROM {TableName} WHERE 1=1";
             string totalCountQuery = $"SELECT Count(*) FROM {TableName} WHERE 1=1";
             if (!string.IsNullOrEmpty(model.Filter))
@@ -16,7 +25,7 @@ namespace Api.Method
                 totalCountQuery += $" and {GenerateSqlQueryFilter(model.Filter)}";
             }
 
-            if (model.Sort.Count() > 0)
+            if (model.Sort?.Count() > 0)
             {
                 sqlQuery += $" {GenerateSort(model.Sort)}";
             }
@@ -25,7 +34,52 @@ namespace Api.Method
 
             return (sqlQuery, totalCountQuery);
         }
+        static string GroupByExpression(List<Group> groups, string TableName)
+        {
+            //SELECT COUNT(*) AS[I0], [m].[Name] AS[I1]
+            //FROM[Movies] AS[m]
+            //GROUP BY[m].[Name]
+            //ORDER BY[m].[Name]
 
+            StringBuilder sb = new StringBuilder();
+            sb.Append("SELECT COUNT(*) AS [I0],");
+            int i = 1;
+
+            foreach (Group group in groups)
+            {
+                sb.Append($" [m].[{group.Selector}] AS[I{i}] ");
+                i++;
+            }
+
+            sb.Append($" FROM[{TableName}] AS[m] ");
+
+            foreach (Group group in groups)
+            {
+                i = 0;
+                sb.Append($" GROUP BY[m].[{group.Selector}] ");
+                if (i < groups.Count - 1)
+                {
+                    sb.Append(',');
+                }
+                i++;
+            }
+            //sort order by
+            foreach (Group group in groups)
+            {
+                i = 0;
+                sb.Append($" ORDER BY[m].[{group.Selector}] ");
+                if (group.Desc)
+                {
+                    sb.Append(" desc ");
+                }
+                if (i < groups.Count - 1)
+                {
+                    sb.Append(',');
+                }
+                i++;
+            }
+            return sb.ToString();
+        }
         static string GenerateSqlQueryFilter(string json)
         {
             StringBuilder sb = new StringBuilder();
@@ -35,7 +89,7 @@ namespace Api.Method
             // Convert the parsed token to a C# array
             object[] resultArray = token.ToObject<object[]>();
 
-            /// filter (like = 152)
+            /// filter (columnName = 152)
             if (!HaveSubJToken(token.ToString()))
             {
                 if (token is JArray conditionArray)
@@ -78,11 +132,8 @@ namespace Api.Method
                             sb.Append($" {item.ToString().ToLower()} ");
                         }
                     }
-                    //Console.WriteLine(item);
                 }
-
             }
-
 
             return sb.ToString();
         }
@@ -101,14 +152,13 @@ namespace Api.Method
         }
         static string TryParseValueChangeType(string inputString)
         {
-            if (DateTime.TryParseExact(inputString, "M/d/yyyy h:mm:ss tt", null, System.Globalization.DateTimeStyles.None, out DateTime dateTime))
+            try
             {
-                // Format the DateTime as a string in the desired format
-                string formattedDate = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
-
+                var datetime = Convert.ToDateTime(inputString);
+                string formattedDate = datetime.ToString("yyyy-MM-dd HH:mm:ss");
                 return $"'{formattedDate}'";
             }
-            else
+            catch (Exception)
             {
                 return inputString;
             }
@@ -151,23 +201,23 @@ namespace Api.Method
         {
             StringBuilder sb = new StringBuilder();
             sb.Append($" Order by ");
-            bool isFirstSort = true;
+            int i = 1;
             foreach (var item in sorts)
             {
                 sb.Append($"{item.Selector.ToString()}");
                 if (item.Desc)
                 {
-                    sb.Append($" desc");
+                    sb.Append($" desc ");
                 }
                 else
                 {
-                    sb.Append($" asc");
+                    sb.Append($" asc ");
                 }
-                if (!isFirstSort)
+                if ((i == 1 && sorts.Count() > 1) || (i != 1 && i != sorts.Count()))
                 {
                     sb.Append(", "); // Add a comma to separate multiple sort items
                 }
-                isFirstSort = false;
+                i++;
             }
             return sb.ToString();
         }
@@ -177,7 +227,7 @@ namespace Api.Method
             {
                 "contains" => $" like N'%{value}%' ",
                 "notcontains" => $" not like N'%{value}%' ",
-                _ => StandartComparisonSqlGenerator(comparison, value)
+                _ => StandartComparisonSqlGenerator(comparison, value)/// example = value
             };
         }
         static string StandartComparisonSqlGenerator(string comparison, string value)

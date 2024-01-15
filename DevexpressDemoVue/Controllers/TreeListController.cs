@@ -1,4 +1,5 @@
-﻿using DevexpressDemoVue.Service;
+﻿using DevexpressDemoVue.DxModel;
+using DevexpressDemoVue.Service;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,7 @@ namespace DevexpressDemoVue.Controllers
             return View();
         }
         [HttpGet]
-        public async Task<object> GetData(DataSourceLoadOptions loadOptions)
+        public async Task<object> GetData(GridDxModel loadOptions)
         {
             var resp = await _responseGetaway.SendTAsync(loadOptions, "api/SiteMenu/GetData", HttpMethod.Post);
 

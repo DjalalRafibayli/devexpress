@@ -96,8 +96,16 @@
                 filteringRow: true,
                 paging: true,
                 sorting: true,
-                groupPaging: true,
-                grouping: true,
+                // groupPaging: true,
+                // grouping: true,
+                grouping: {
+                    contextMenuEnabled: true,
+                    expandMode: 'rowClick',
+                },
+                groupPanel: {
+                    emptyPanelText: 'Use the context menu of header columns to group data',
+                    visible: true,
+                },
                 summary: true
             },
             searchPanel: {

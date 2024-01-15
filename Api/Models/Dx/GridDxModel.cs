@@ -4,7 +4,7 @@
 	{
 		public string Selector { get; set; }
 		public bool Desc { get; set; }
-		public string GroupInterval { get; set; }
+		public string? GroupInterval { get; set; }
 		public bool IsExpanded { get; set; }
 	}
 
